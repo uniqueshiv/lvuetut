@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Todo;
 use Illuminate\Http\Request;
-use App\Http\Request\TodoRequest;
+use App\Http\Requests\TodoRequest;
 class TodoController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -14,8 +15,7 @@ class TodoController extends Controller
      */
     public function index()
     {
-        $task=Todo:all();
-        return request()->json(200,$tasks);
+      return $this->getrecord();
     }
 
     /**
@@ -36,7 +36,10 @@ class TodoController extends Controller
      */
     public function store(TodoRequest $request)
     {
-        //
+        $todo=Todo::create($request->all());
+        if($todo){
+          return $this->getrecord();
+        }
     }
 
     /**
@@ -45,9 +48,9 @@ class TodoController extends Controller
      * @param  \App\Todo  $todo
      * @return \Illuminate\Http\Response
      */
-    public function show(Todo $todo)
+    public function show(Todo $task)
     {
-        //
+        return "this is show method";
     }
 
     /**
@@ -56,9 +59,10 @@ class TodoController extends Controller
      * @param  \App\Todo  $todo
      * @return \Illuminate\Http\Response
      */
-    public function edit(Todo $todo)
+    public function edit(Todo $task)
     {
-        //
+    //  $task = todo::find($task);
+      return request()->json(200,$task);
     }
 
     /**
@@ -68,9 +72,16 @@ class TodoController extends Controller
      * @param  \App\Todo  $todo
      * @return \Illuminate\Http\Response
      */
-    public function update(TodoRequest $request, Todo $todo)
+    public function update(TodoRequest $request, Todo $task)
     {
-        //
+      $task->name=$request->name;
+      if($task->save()){
+        return $this->getrecord();
+      }
+    }
+    private function getrecord(){
+      $tasks=Todo::orderBy('created_at','desc')->paginate(10);
+      return request()->json(200,$tasks);
     }
 
     /**

@@ -15,4 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('todo','TodoController');
+Route::resource('tasks','TodoController');
+// Route::get('sk',function(){
+//   echo "hello";
+// });
