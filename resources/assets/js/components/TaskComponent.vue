@@ -10,6 +10,8 @@
                   </div>
 
                   <div class="panel-body">
+                    <input type="text" class="form-control" name="search" value="" v-model="search" @keyup="searchRecord" placeholder="Search...">
+                    <br>
                   <ul class="list-group">
                       <li class="list-group-item" v-for="task in tasks.data">{{task.id}} - {{task.name}}
                         <span class="pull-right">
@@ -31,7 +33,7 @@
       <div id="modal">
         <addtask @recordadded="refreshRecord"></addtask>
         <edittask :rec="editRec" @recordupdated="refreshRecord"></edittask>
-        <viewtask :rec="viewRec"></viewtask>
+        <viewtask :rec="editRec"></viewtask>
       </div>
 
   </div>
@@ -51,6 +53,7 @@ export default {
       records:{},
       editRec:{},
       viewRec:{},
+      search:'',
       errors:[],
     }
   },
@@ -71,15 +74,45 @@ export default {
       axios.get('http://localhost/lvue/public/tasks/'+id+'/edit')
       .then(response=>{
         this.editRec=response.data;
+        //this.viewRec=response.data;
+        //console.log('viewRec='+viewRec);
         console.log(response.data);
       })
       .catch(error=>this.errors=error.response.data.errors)
     },
+    delRecord(id){
+      const reply=confirm('Are your sure , You want to delete this record ?')
+      if(reply){
+          axios.post('http://localhost/lvue/public/tasks/'+id,{
+           id:id,
+          _method:'DELETE'
+          })
+          .then(response=>this.refreshRecord(response))
+          .catch(error=>console.log(error.response.data.errors))
+      }else{
+        return
+      }
+    },
+    searchRecord(){
+      if(this.search.length>=3){
+        axios.get('http://localhost/lvue/public/tasks/search/'+this.search)
+        .then(response=>{
+          this.tasks=response.data;
+          console.log(response.data);
+        })
+        .catch(error=>console.log(error.response.data.errors))
+      }else{
+        this.getResults();
+      }
+    }
 
   },
   created(){
     axios.get('http://localhost/lvue/public/tasks')
-          .then((response)=>this.tasks=response.data)
+          .then((response)=>{
+            this.tasks=response.data;
+            console.log(response.data);
+          })
           .catch((error)=>console.log(error));
           console.log('task component loaded .....')
   }

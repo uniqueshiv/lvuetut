@@ -16,6 +16,4 @@ Route::get('/', function () {
 });
 
 Route::resource('tasks','TodoController');
-// Route::get('sk',function(){
-//   echo "hello";
-// });
+Route::get('tasks/search/{term?}','TodoController@index');

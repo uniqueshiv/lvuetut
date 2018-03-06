@@ -13,8 +13,12 @@ class TodoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($term=null)
     {
+      if($term!=null){
+        $tasks['data']=Todo::where('name','like','%'.$term.'%')->get();
+        return request()->json(200,$tasks);
+      }
       return $this->getrecord();
     }
 
@@ -90,8 +94,12 @@ class TodoController extends Controller
      * @param  \App\Todo  $todo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Todo $todo)
+    public function destroy(Todo $task)
     {
-        //
+        if($task->delete()){
+         return $this->getrecord();
+        }else{
+          return repsonse()->json(425,['delete'=>'Error deleting record']);
+        }
     }
 }

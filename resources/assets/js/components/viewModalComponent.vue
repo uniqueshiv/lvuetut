@@ -5,12 +5,12 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="">Add New Record!</h4>
+          <h4 class="modal-title" id=""> Record!</h4>
         </div>
         <div class="modal-body">
 
-          <label for="name">Add New Task</label>
-          <p  class="form-control">{{viewRec.name}}</p>
+          <label for="name"> Task</label>
+          <p  class="">{{rec.name}}</p>
                 </div>
         <div class="modal-footer">
       </div>
@@ -21,7 +21,7 @@
 
 <script>
 export default{
-  props:['viewRec'],
+  props:['rec'],
 }
 
 </script>
